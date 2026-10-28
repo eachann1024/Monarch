@@ -11,7 +11,7 @@ export function formatMs(ms: number): string {
 export function capitalizeToastError(message: string): string {
   const trimmed = message.trim();
   if (!trimmed) {
-    return "Error";
+    return "错误";
   }
 
   return trimmed.charAt(0).toUpperCase() + trimmed.slice(1);

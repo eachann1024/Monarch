@@ -34,7 +34,7 @@ export function MonitorCard({
     (display.is_active && activeDisplayCount <= 1);
   return (
     <article
-      aria-label={`Monitor ${monitorNumber}: ${display.friendly_name}`}
+      aria-label={`显示器 ${monitorNumber}：${display.friendly_name}`}
       className="grid min-w-0 gap-3 p-4"
     >
       <div className="flex items-start gap-3">
@@ -58,10 +58,10 @@ export function MonitorCard({
         </div>
         <span className="shrink-0 text-xs text-muted-foreground">
           {display.is_primary
-            ? "Primary"
+            ? "主显示器"
             : display.is_active
-              ? "Active"
-              : "Detached"}
+              ? "活动"
+              : "已断开"}
         </span>
       </div>
       <div className="flex flex-wrap items-center justify-between gap-2">
@@ -70,11 +70,11 @@ export function MonitorCard({
             className="shortcut"
             title={
               shortcutsEnabled
-                ? "Toggle this monitor"
-                : "Global shortcuts are disabled"
+                ? "切换此显示器"
+                : "全局快捷键已禁用"
             }
           >
-            {shortcutsEnabled ? shortcutLabel : `${shortcutLabel} · off`}
+            {shortcutsEnabled ? shortcutLabel : `${shortcutLabel} · 关闭`}
           </kbd>
         ) : (
           <span />
@@ -86,10 +86,10 @@ export function MonitorCard({
             variant="outline"
             disabled={editDisabled}
             onClick={onEdit}
-            aria-label={`Settings for monitor ${monitorNumber}: ${display.friendly_name}`}
+            aria-label={`显示器 ${monitorNumber} 设置：${display.friendly_name}`}
           >
             <SlidersHorizontal aria-hidden="true" />
-            Settings
+            设置
           </Button>
           <Button
             type="button"
@@ -99,11 +99,11 @@ export function MonitorCard({
             onClick={() => onToggleRequest(display)}
             title={
               display.is_active && activeDisplayCount <= 1
-                ? "Keep at least one display active"
+                ? "请至少保留一台活动显示器"
                 : undefined
             }
           >
-            {display.is_active ? "Detach Display" : "Attach Display"}
+            {display.is_active ? "断开显示器" : "重新连接显示器"}
           </Button>
         </div>
       </div>

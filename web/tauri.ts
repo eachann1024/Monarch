@@ -30,8 +30,8 @@ const viteEnv = (
 const useWebMock =
   (viteEnv?.VITE_MONARCH_WEB_MOCK ?? "") === "1" || !isTauriRuntime();
 const GITHUB_RELEASES_LATEST_API =
-  "https://api.github.com/repos/Nuzair46/Monarch/releases/latest";
-const GITHUB_RELEASES_URL = "https://github.com/Nuzair46/Monarch/releases";
+  "https://api.github.com/repos/eachann1024/Monarch/releases/latest";
+const GITHUB_RELEASES_URL = "https://github.com/eachann1024/Monarch/releases";
 function isTauriRuntime(): boolean {
   if (typeof window === "undefined") {
     return false;
@@ -105,16 +105,16 @@ export async function getAppVersion(): Promise<string> {
 function normalizeExternalUrl(url: string): string {
   const trimmed = url.trim();
   if (!trimmed) {
-    throw new Error("URL cannot be empty");
+    throw new Error("URL 不能为空");
   }
   let parsed: URL;
   try {
     parsed = new URL(trimmed);
   } catch {
-    throw new Error("Invalid URL");
+    throw new Error("无效的 URL");
   }
   if (parsed.protocol !== "http:" && parsed.protocol !== "https:") {
-    throw new Error("Only http(s) URLs are supported");
+    throw new Error("仅支持 http(s) URL");
   }
   return parsed.toString();
 }
@@ -153,8 +153,11 @@ export async function checkGithubReleaseUpdate(): Promise<ReleaseUpdateCheckResu
       Accept: "application/vnd.github+json",
     },
   });
+  if (response.status === 404) {
+    throw new Error("此简体中文分支尚无已发布版本；可在 GitHub 仓库的 Actions 页面下载构建产物。");
+  }
   if (!response.ok) {
-    throw new Error(`GitHub releases check failed (${response.status})`);
+    throw new Error(`检查 GitHub Releases 失败 (${response.status})`);
   }
   const payload = (await response.json()) as {
     tag_name?: unknown;
@@ -164,7 +167,7 @@ export async function checkGithubReleaseUpdate(): Promise<ReleaseUpdateCheckResu
     typeof payload.tag_name !== "string" ||
     payload.tag_name.trim().length === 0
   ) {
-    throw new Error("GitHub releases response missing tag_name");
+    throw new Error("GitHub Releases 响应缺少 tag_name");
   }
   const latestTag = payload.tag_name.trim();
   const latestVersion = normalizeVersion(latestTag);

@@ -6,6 +6,7 @@ import { Input } from "@/components/ui/input";
 import { Checkbox } from "@/components/ui/checkbox";
 import { TabsContent } from "@/components/ui/tabs";
 import { indexedShortcutLabel } from "@/app/utils";
+import { localizeReason } from "@/app/messages";
 import type { AppSnapshot, ProfileDisplayOptions } from "@/types";
 
 type ProfilesTabProps = {
@@ -59,7 +60,7 @@ export function ProfilesTab({
                   className="size-4 text-muted-foreground"
                   aria-hidden="true"
                 />
-                Save current setup
+                保存当前设置
               </CardTitle>
             </CardHeader>
             <CardContent>
@@ -71,14 +72,13 @@ export function ProfilesTab({
                 }}
               >
                 <p className="text-xs leading-relaxed text-muted-foreground">
-                  Capture your current display layout and choose an optional
-                  audio output.
+                  捕获当前的显示器布局，并可选择关联音频输出设备。
                 </p>
                 <label className="grid gap-1.5">
-                  <span className="field-label">Profile name</span>
+                  <span className="field-label">配置方案名称</span>
                   <Input
                     type="text"
-                    placeholder="e.g. Work, Gaming, TV"
+                    placeholder="例如：工作、游戏、电视"
                     value={newProfileName}
                     disabled={locked}
                     onChange={(event) =>
@@ -87,7 +87,7 @@ export function ProfilesTab({
                   />
                 </label>
                 <AudioOutputSelect
-                  label="Audio output for new profile"
+                  label="新配置方案的音频输出"
                   audio={snapshot.audio}
                   value={newProfileAudio}
                   onChange={onNewProfileAudioChange}
@@ -102,9 +102,9 @@ export function ProfilesTab({
                     }
                   />
                   <span>
-                    Ignore missing displays
+                    忽略缺失的显示器
                     <span className="block text-muted-foreground">
-                      Apply this profile even when some saved monitors are disconnected.
+                      即使部分保存的显示器未连接，也应用此配置方案。
                     </span>
                   </span>
                 </label>
@@ -112,11 +112,10 @@ export function ProfilesTab({
                   type="submit"
                   disabled={locked || !newProfileName.trim()}
                 >
-                  Save Current Layout
+                  保存当前布局
                 </Button>
                 <p className="text-xs leading-relaxed text-muted-foreground">
-                  Saving a profile leaves your active displays and audio
-                  unchanged.
+                  保存配置方案不会改变您当前活动的显示器和音频。
                 </p>
               </form>
             </CardContent>
@@ -128,18 +127,18 @@ export function ProfilesTab({
                   className="size-4 text-muted-foreground"
                   aria-hidden="true"
                 />
-                Saved profiles
+                已保存的配置方案
               </CardTitle>
               <span className="text-xs text-muted-foreground">
-                {snapshot.profiles.length} saved
+                已保存 {snapshot.profiles.length} 个
               </span>
             </CardHeader>
             <CardContent className="divide-y p-0">
               {snapshot.profiles.length === 0 ? (
                 <div className="space-y-2 px-4 py-10 text-center">
-                  <p className="text-sm font-medium">No profiles yet</p>
+                  <p className="text-sm font-medium">暂无配置方案</p>
                   <p className="text-xs text-muted-foreground">
-                    Arrange your displays, then save your first setup.
+                    排列您的显示器，然后保存您的第一个配置方案。
                   </p>
                 </div>
               ) : (
@@ -154,7 +153,7 @@ export function ProfilesTab({
                   return (
                     <article
                       key={`${profile.name}:${profile.audio_output?.id ?? ""}`}
-                      aria-label={`Profile ${profile.name}`}
+                      aria-label={`配置方案 ${profile.name}`}
                       className="grid min-w-0 gap-4 p-4"
                     >
                       <div className="flex flex-wrap items-start justify-between gap-3">
@@ -164,20 +163,19 @@ export function ProfilesTab({
                           </h3>
                           <div className="flex flex-wrap items-center gap-2 text-xs text-muted-foreground">
                             <span>
-                              {activeCount} active{" "}
-                              {activeCount === 1 ? "display" : "displays"}
+                              {activeCount} 台活动显示器
                             </span>
                             {shortcutLabel && (
                               <kbd
                                 className="shortcut"
                                 title={
                                   shortcutsEnabled
-                                    ? "Apply this profile"
-                                    : "Global shortcuts are disabled"
+                                    ? "应用此配置方案"
+                                    : "全局快捷键已禁用"
                                 }
                               >
                                 {shortcutLabel}
-                                {!shortcutsEnabled && " · off"}
+                                {!shortcutsEnabled && " · 关闭"}
                               </kbd>
                             )}
                           </div>
@@ -191,7 +189,7 @@ export function ProfilesTab({
                             onClick={() => onApplyProfile(profile.name)}
                           >
                             <Play aria-hidden="true" />
-                            Apply
+                            应用
                           </Button>
                           <Button
                             type="button"
@@ -199,8 +197,8 @@ export function ProfilesTab({
                             variant="ghost"
                             className="h-8 w-8"
                             disabled={locked}
-                            aria-label={`Delete profile ${profile.name}`}
-                            title="Delete profile"
+                            aria-label={`删除配置方案 ${profile.name}`}
+                            title="删除配置方案"
                             onClick={() => onDeleteProfileRequest(profile.name)}
                           >
                             <Trash2 aria-hidden="true" />
@@ -217,8 +215,11 @@ export function ProfilesTab({
                               ignore_missing_displays: checked === true,
                             })}
                           />
-                          <span>Ignore missing displays
-                            <span className="block text-muted-foreground">Apply the remaining saved displays when a monitor is disconnected.</span>
+                          <span>
+                            忽略缺失的显示器
+                            <span className="block text-muted-foreground">
+                              当有显示器未连接时，仍应用其余已保存的显示器。
+                            </span>
                           </span>
                         </label>
                       </div>
@@ -235,8 +236,8 @@ export function ProfilesTab({
             </CardContent>
           </Card>
           <p className="text-xs leading-relaxed text-muted-foreground min-[900px]:col-span-2">
-            {snapshot.audio.unavailable_reason ??
-              "Unavailable TV audio outputs can be saved; Monarch waits for them when the display activates. Communications devices keep their Windows preference."}
+            {localizeReason(snapshot.audio.unavailable_reason) ??
+              "不可用的电视音频输出仍可保存；当显示器激活时，Monarch 会等待其可用。通信设备保留其 Windows 首选项。"}
           </p>
         </main>
       ) : null}

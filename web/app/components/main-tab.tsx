@@ -49,7 +49,7 @@ export function MainTab({
   useEffect(() => {
     if (Object.keys(offsets).length)
       setNotice(
-        "Display settings changed. Your unsaved position adjustments are still shown in the preview.",
+        "显示器设置已变更。您尚未保存的位置调整仍显示在预览中。",
       );
     setEditing(null);
   }, [signature]);
@@ -73,14 +73,14 @@ export function MainTab({
                   className="size-4 text-muted-foreground"
                   aria-hidden="true"
                 />
-                Display layout
+                显示器布局
               </CardTitle>
               {draft ? (
-                <Badge variant="outline">Unsaved layout</Badge>
+                <Badge variant="outline">未保存的布局</Badge>
               ) : (
                 <span className="text-xs text-muted-foreground">
-                  {activeDisplayCount} active · {snapshot.displays.length}{" "}
-                  detected
+                  {activeDisplayCount} 台活动 · 检测到 {snapshot.displays.length}{" "}
+                  台
                 </span>
               )}
             </CardHeader>
@@ -112,7 +112,7 @@ export function MainTab({
               />
               <div className="mt-3 flex flex-wrap items-center justify-between gap-2">
                 <p className="text-xs text-muted-foreground">
-                  Drag to arrange. Use arrow keys for fine adjustments.
+                  拖动以排列显示器。使用方向键可进行微调。
                 </p>
               </div>
               {notice && (
@@ -138,7 +138,7 @@ export function MainTab({
                       setNotice(null);
                     }}
                   >
-                    Discard changes
+                    放弃更改
                   </Button>
                   <Button
                     disabled={!draft || locked || Boolean(error)}
@@ -150,7 +150,7 @@ export function MainTab({
                       });
                     }}
                   >
-                    Save layout
+                    保存布局
                   </Button>
                 </div>
               </div>
@@ -159,7 +159,7 @@ export function MainTab({
 
           <Card className="min-w-0">
             <CardHeader className="min-h-12 flex-row items-center justify-between gap-2 py-2">
-              <CardTitle>Monitors</CardTitle>
+              <CardTitle>显示器</CardTitle>
               <Button
                 type="button"
                 variant="outline"
@@ -168,7 +168,7 @@ export function MainTab({
                 onClick={onRestoreLastLayout}
               >
                 <RotateCcw aria-hidden="true" />
-                Restore Last Layout
+                还原上次布局
               </Button>
             </CardHeader>
             <CardContent className="max-h-[36rem] divide-y overflow-auto p-0">
@@ -213,14 +213,13 @@ export function MainTab({
 
         <details className="rounded-md border text-xs text-muted-foreground">
           <summary className="cursor-pointer px-4 py-3 font-medium text-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring">
-            Troubleshooting display connections
+            显示器连接排错提示
           </summary>
           <p className="px-4 pb-4 leading-relaxed">
-            If a monitor is missing, press{" "}
-            <kbd className="shortcut">Win + P</kbd> and choose{" "}
-            <span className="text-foreground">Extend</span> or{" "}
-            <span className="text-foreground">PC screen only</span> to reset the
-            display mode.
+            如果显示器未显示，请按{" "}
+            <kbd className="shortcut">Win + P</kbd> 并选择{" "}
+            <span className="text-foreground">扩展</span> 或{" "}
+            <span className="text-foreground">仅电脑屏幕</span> 以重置显示模式。
           </p>
         </details>
       </main>

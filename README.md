@@ -1,3 +1,17 @@
+# Monarch 简体中文分支
+
+这是 [Nuzair46/Monarch](https://github.com/Nuzair46/Monarch) 的非官方中文 fork，保留上游 [MIT 许可证](LICENSE)。应用界面、系统托盘菜单、MSI 安装界面及常见程序提示默认使用简体中文；设备名称、用户配置方案名称和底层驱动的原始诊断细节保留原样。
+
+- [下载此中文分支的 Windows 构建产物](https://github.com/eachann1024/Monarch/actions/workflows/pr-checks.yml)：打开成功的构建，在 Artifacts 中下载 EXE / MSI；下载产物需要登录 GitHub。
+- [从源码构建](docs/zh-CN.md)：Windows 环境要求、固定依赖版本和 MSI 构建命令。
+- [翻译审校记录](docs/zh-CN-review.md)：Gemini 3.8 的覆盖范围、问题处理与验证边界。
+
+软件构建和浏览器模拟交互不能替代 Windows 多显示器真机验证。下方保留上游英文说明；其中的上游下载链接提供英文原版。
+
+---
+
+## Upstream Documentation (English Reference)
+
 <center>
   <h1 align="center">Monarch</h1>
   <h4 align="center">Detach, restore, and switch monitor layouts without touching cables.</h4>

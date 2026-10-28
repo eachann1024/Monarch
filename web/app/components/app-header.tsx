@@ -17,11 +17,11 @@ export function AppHeader() {
             <span className="shortcut">v{packageJson.version}</span>
           </div>
           <p className="text-xs text-muted-foreground">
-            Display &amp; audio profiles
+            显示器与音频配置方案
           </p>
         </div>
         <div className="order-3 w-full sm:order-none sm:w-auto">
-          <TabsList aria-label="Main navigation" className="w-full sm:w-auto">
+          <TabsList aria-label="主导航" className="w-full sm:w-auto">
             {VIEW_OPTIONS.map(({ id, label }) => {
               const Icon = icons[id];
               return (
@@ -41,8 +41,8 @@ export function AppHeader() {
           type="button"
           variant="outline"
           size="icon"
-          title="Open Monarch on GitHub"
-          aria-label="Open Monarch GitHub repository"
+          title="在 GitHub 上打开 Monarch"
+          aria-label="打开 Monarch 的 GitHub 仓库"
           onClick={() => {
             void openExternalUrl(REPO_URL);
           }}

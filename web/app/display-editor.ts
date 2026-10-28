@@ -45,7 +45,7 @@ export function changeAttachment(
   const output = draft.outputs.find((o) => o.display_key === key)!;
   if (mode === "detached") {
     if (output.enabled && draft.outputs.filter((o) => o.enabled).length === 1)
-      throw new Error("Cannot detach the last active display.");
+      throw new Error("无法断开最后一台活动显示器。");
     output.enabled = false;
     output.primary = false;
     output.clone_group = null;
@@ -65,7 +65,7 @@ export function changeAttachment(
     const target = draft.outputs.find(
       (o) => o.display_key === mode && o.enabled && o !== output,
     );
-    if (!target) throw new Error("Choose an active display to duplicate.");
+    if (!target) throw new Error("请选择一台活动显示器进行复制。");
     if (sameSource(output, target)) return draft;
     const groups = new Set(draft.outputs.map((o) => o.clone_group));
     let group = target.clone_group;
@@ -85,7 +85,7 @@ export function changeAttachment(
     const resolutions = sharedResolutionChoices(draft, output, capabilities);
     if (!resolutions.length)
       throw new Error(
-        "Windows reports no shared resolution for these monitors. Extend and refresh them to enumerate their modes before duplicating.",
+        "Windows 报告这些显示器之间没有共享分辨率。请在复制前将它们设为扩展并刷新以枚举其模式。",
       );
     const preferred = nativeResolution({
       ...output,
@@ -112,7 +112,7 @@ export function changeAttachment(
       ) ?? null;
     if (scale == null && !canPreserveScaling(draft, output, capabilities))
       throw new Error(
-        "Windows cannot report a shared scaling value for these monitors. Extend and refresh them before duplicating.",
+        "Windows 无法报告这些显示器之间的共享缩放比例。请在复制前将它们设为扩展并刷新。",
       );
     for (const member of members) {
       member.resolution = { ...sharedResolution };
@@ -284,16 +284,16 @@ export function layoutError(
   capabilities: DisplayCapabilities[],
 ): string | null {
   const active = layout.outputs.filter((o) => o.enabled);
-  if (!active.length) return "Keep at least one monitor active.";
+  if (!active.length) return "请至少保留一台活动显示器。";
   for (const [index, output] of active.entries()) {
     if (
       Math.abs(output.position.x) > 1_000_000 ||
       Math.abs(output.position.y) > 1_000_000
     )
-      return "Move monitors closer to the desktop origin.";
+      return "请将显示器移近桌面原点。";
     const cap = capabilities.find((c) => capabilityMatches(output, c));
     if (!cap)
-      return "A monitor is no longer available. Refresh the layout before saving.";
+      return "某台显示器已不可用。请在保存前刷新布局。";
     if (
       output.resolution.width > 0 &&
       cap.modes_unavailable_reason == null &&
@@ -301,7 +301,7 @@ export function layoutError(
         (rate) => Math.abs(rate - output.refresh_rate_mhz) <= 2,
       )
     )
-      return "Choose a supported resolution and refresh rate in the monitor’s properties.";
+      return "请在显示器属性中选择受支持的分辨率和刷新率。";
     for (const other of active.slice(index + 1)) {
       if (sameSource(output, other)) continue;
       if (
@@ -310,7 +310,7 @@ export function layoutError(
         output.position.y < other.position.y + other.resolution.height &&
         other.position.y < output.position.y + output.resolution.height
       )
-        return "Monitors overlap. Drag them apart before saving the layout.";
+        return "显示器存在重叠。保存布局前请将其拖开。";
     }
   }
   return desktopGeometryError(layout);
@@ -336,8 +336,8 @@ export function desktopGeometryError(layout: Layout): string | null {
         .some((b) => rectanglesOverlap(rectangle(a), rectangle(b))),
     )
   )
-    return "Monitors overlap. Drag them apart before saving the layout.";
-  if (!active.length) return "Keep at least one monitor active.";
+    return "显示器存在重叠。保存布局前请将其拖开。";
+  if (!active.length) return "请至少保留一台活动显示器。";
   const connected = new Set([active[0]]);
   let added = true;
   while (added) {
@@ -354,7 +354,7 @@ export function desktopGeometryError(layout: Layout): string | null {
   }
   return connected.size === active.length
     ? null
-    : "Display edges must touch. Drag the monitors together to remove gaps before saving.";
+    : "显示器边缘必须相接。保存前请将显示器拖到一起以消除间隙。";
 }
 
 // Resolution and rotation can grow into a neighbour or leave a gap. Keep the

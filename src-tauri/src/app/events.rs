@@ -253,10 +253,10 @@ fn build_tray_menu<R: Runtime>(
     app: &AppHandle<R>,
     snapshot: Option<&TrayMenuSnapshot>,
 ) -> tauri::Result<tauri::menu::Menu<R>> {
-    let mut profiles_menu = SubmenuBuilder::new(app, "Profiles");
+    let mut profiles_menu = SubmenuBuilder::new(app, "配置方案");
     if let Some(snapshot) = snapshot {
         if snapshot.profiles.is_empty() {
-            profiles_menu = profiles_menu.text("profiles.none", "(No Profiles)");
+            profiles_menu = profiles_menu.text("profiles.none", "(无配置方案)");
         } else {
             for profile in &snapshot.profiles {
                 profiles_menu = profiles_menu.text(format!("profile::{profile}"), profile.clone());
@@ -264,13 +264,13 @@ fn build_tray_menu<R: Runtime>(
         }
     }
 
-    let mut toggles_menu = SubmenuBuilder::new(app, "Toggle Monitor");
+    let mut toggles_menu = SubmenuBuilder::new(app, "切换显示器");
     if let Some(snapshot) = snapshot {
         for display in &snapshot.displays {
             let label = if display.is_active {
-                format!("Detach {}", display.friendly_name)
+                format!("断开 {}", display.friendly_name)
             } else {
-                format!("Attach {}", display.friendly_name)
+                format!("重新连接 {}", display.friendly_name)
             };
             toggles_menu = toggles_menu.text(format!("toggle::{}", display.id_key), label);
         }
@@ -280,10 +280,10 @@ fn build_tray_menu<R: Runtime>(
         .item(&profiles_menu.build()?)
         .item(&toggles_menu.build()?)
         .separator()
-        .text("restore_last_layout", "Restore Displays")
-        .text("open_main", "Open App")
+        .text("restore_last_layout", "还原上次布局")
+        .text("open_main", "打开程序")
         .separator()
-        .text("quit_app", "Quit")
+        .text("quit_app", "退出")
         .build()?;
 
     Ok(menu)

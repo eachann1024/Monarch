@@ -35,7 +35,7 @@ export function LayoutPreview({
           .map(
             (m) =>
               snapshot?.displays.find((d) => d.id_key === m.display_key)
-                ?.friendly_name ?? "Display",
+                ?.friendly_name ?? "显示器",
           )
           .join(" + "),
       };
@@ -46,7 +46,7 @@ export function LayoutPreview({
       disabled={disabled}
       onMove={onMove}
       joinOnDrop
-      label="Display layout preview"
+      label="显示器布局预览"
     />
   );
 }

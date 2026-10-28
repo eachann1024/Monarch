@@ -31,7 +31,7 @@ export function MonitorArrangement({
   if (!monitors.length)
     return (
       <div className="grid h-64 place-items-center rounded-md border text-sm text-muted-foreground">
-        No active monitors
+        无活动显示器
       </div>
     );
   const left = Math.min(...monitors.map((m) => m.x));
@@ -109,7 +109,7 @@ export function MonitorArrangement({
           key={monitor.key}
           role={editable ? "button" : "img"}
           tabIndex={editable ? 0 : undefined}
-          aria-label={`${editable ? "Move monitor" : "Monitor"} ${monitor.label}: ${monitor.name}`}
+          aria-label={`${editable ? "移动显示器" : "显示器"} ${monitor.label}: ${monitor.name}`}
           data-monitor-key={monitor.key}
           className={
             editable
@@ -175,7 +175,7 @@ export function MonitorArrangement({
               fontSize={Math.min(monitor.width, monitor.height) * 0.07}
               className="pointer-events-none fill-muted-foreground"
             >
-              Primary
+              主显示器
             </text>
           )}
         </g>

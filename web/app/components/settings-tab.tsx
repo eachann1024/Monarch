@@ -59,7 +59,7 @@ function ShortcutBaseField({
   defaultValue,
   onChange,
 }: ShortcutBaseFieldProps) {
-  const displayValue = value.trim() || "Custom shortcuts";
+  const displayValue = value.trim() || "自定义快捷键";
 
   const handleKeyDown = (event: KeyboardEvent<HTMLInputElement>) => {
     if (event.key === "Tab") {
@@ -177,10 +177,10 @@ export function SettingsTab({
                   className="size-4 text-muted-foreground"
                   aria-hidden="true"
                 />
-                Preferences
+                偏好设置
               </CardTitle>
               {settingsDirty && (
-                <Badge variant="outline">Unsaved changes</Badge>
+                <Badge variant="outline">未保存的更改</Badge>
               )}
             </CardHeader>
             <form onSubmit={onSettingsSubmit}>
@@ -189,16 +189,16 @@ export function SettingsTab({
                   <div className="flex flex-wrap items-center justify-between gap-3">
                     <label htmlFor="revert-timeout" className="grid gap-1">
                       <span className="text-sm font-medium">
-                        Confirmation timeout
+                        确认超时时间
                       </span>
                       <span className="text-xs text-muted-foreground">
-                        Revert unconfirmed display changes after 1–60 seconds.
+                        在 1–60 秒后自动还原未确认的显示器更改。
                       </span>
                     </label>
                     <div className="flex items-center gap-2">
                       <Input
                         id="revert-timeout"
-                        aria-label="Revert timeout (seconds)"
+                        aria-label="还原超时时间（秒）"
                         type="text"
                         inputMode="numeric"
                         pattern="[0-9]*"
@@ -210,7 +210,7 @@ export function SettingsTab({
                         className="w-20 font-mono"
                       />
                       <span className="text-xs text-muted-foreground">
-                        seconds
+                        秒
                       </span>
                     </div>
                   </div>
@@ -233,19 +233,19 @@ export function SettingsTab({
                         id="start-with-windows-label"
                         className="font-medium"
                       >
-                        Start with Windows
+                        开机启动
                       </span>
                       <span
                         id="start-with-windows-hint"
                         className="text-xs text-muted-foreground"
                       >
-                        Launch in the tray about 10 seconds after sign-in.
+                        登录后约 10 秒在系统托盘中启动。
                       </span>
                     </label>
                   </div>
                   <div className="grid gap-1.5">
                     <label htmlFor="startup-profile" className="field-label">
-                      Launch profile (optional)
+                      启动时应用的配置方案（可选）
                     </label>
                     <Select
                       value={startupProfileSelectValue}
@@ -257,15 +257,15 @@ export function SettingsTab({
                       }
                     >
                       <SelectTrigger id="startup-profile">
-                        <SelectValue placeholder="Do not apply a profile" />
+                        <SelectValue placeholder="不应用配置方案" />
                       </SelectTrigger>
                       <SelectContent>
                         <SelectItem value={NO_STARTUP_PROFILE_VALUE}>
-                          Do not apply a profile
+                          不应用配置方案
                         </SelectItem>
                         {!selectedProfileExists && startupProfileName && (
                           <SelectItem value={startupProfileName}>
-                            {startupProfileName} (missing)
+                            {startupProfileName} (已丢失)
                           </SelectItem>
                         )}
                         {snapshot.profiles.map((profile) => (
@@ -276,7 +276,7 @@ export function SettingsTab({
                       </SelectContent>
                     </Select>
                     <p className="text-xs text-muted-foreground">
-                      Applied whenever Monarch launches.
+                      Monarch 启动时自动应用。
                     </p>
                   </div>
                 </section>
@@ -286,7 +286,7 @@ export function SettingsTab({
                       className="size-4 text-muted-foreground"
                       aria-hidden="true"
                     />
-                    Keyboard shortcuts
+                    快捷键
                   </h3>
                   <div className="flex items-center gap-3">
                     <Checkbox
@@ -300,31 +300,28 @@ export function SettingsTab({
                       htmlFor="enable-global-shortcuts"
                       className="text-sm"
                     >
-                      Enable global shortcuts
+                      启用全局快捷键
                     </label>
                   </div>
                   <p className="text-xs leading-relaxed text-muted-foreground">
-                    Click a field and press your modifier keys. Monarch adds
-                    each profile or monitor number (1–9, then 0). Backspace
-                    restores the default. Existing custom shortcuts stay until
-                    you record a new base.
+                    点击输入框并按下修饰键。Monarch 会为每个配置方案或显示器追加数字编号（1–9，然后是 0）。按 Backspace 键恢复默认值。已有自定义快捷键将保留，直到您记录新的修饰键组合。
                   </p>
                   <div className="grid gap-4 sm:grid-cols-2">
                     <ShortcutBaseField
                       id="profile-shortcut-base"
-                      label="Profile shortcut base"
+                      label="配置方案快捷键修饰键组合"
                       value={profileShortcutBase}
                       defaultValue={DEFAULT_PROFILE_SHORTCUT_BASE}
                       onChange={onProfileShortcutBaseChange}
-                      description="Example: Ctrl + Shift + 1 applies the first profile."
+                      description="示例：Ctrl + Shift + 1 应用第一个配置方案。"
                     />
                     <ShortcutBaseField
                       id="monitor-shortcut-base"
-                      label="Monitor shortcut base"
+                      label="显示器快捷键修饰键组合"
                       value={displayShortcutBase}
                       defaultValue={DEFAULT_MONITOR_SHORTCUT_BASE}
                       onChange={onDisplayShortcutBaseChange}
-                      description="Example: Ctrl + Alt + 1 toggles monitor 1."
+                      description="示例：Ctrl + Alt + 1 切换显示器 1。"
                     />
                   </div>
                 </section>
@@ -342,13 +339,13 @@ export function SettingsTab({
                     disabled={!settingsDirty || disabled}
                     onClick={onDiscardSettings}
                   >
-                    Discard changes
+                    放弃更改
                   </Button>
                   <Button
                     type="submit"
                     disabled={!canSubmitSettings || disabled}
                   >
-                    Save Settings
+                    保存设置
                   </Button>
                 </div>
               </div>
@@ -361,12 +358,12 @@ export function SettingsTab({
                   className="size-4 text-muted-foreground"
                   aria-hidden="true"
                 />
-                Updates
+                更新
               </CardTitle>
             </CardHeader>
             <CardContent className="grid gap-4">
               <p className="text-xs leading-relaxed text-muted-foreground">
-                Check GitHub Releases for a newer version of Monarch.
+                检查 GitHub Releases 获取 Monarch 的更新版本。
               </p>
               <div className="flex flex-wrap gap-2">
                 <Button
@@ -375,7 +372,7 @@ export function SettingsTab({
                   disabled={checkingUpdates}
                   onClick={onCheckForUpdates}
                 >
-                  {checkingUpdates ? "Checking…" : "Check for Updates"}
+                  {checkingUpdates ? "正在检查…" : "检查更新"}
                 </Button>
                 <Button
                   type="button"
@@ -384,21 +381,21 @@ export function SettingsTab({
                     void openExternalUrl(releasesUrl);
                   }}
                 >
-                  Releases
+                  发布页面
                   <ExternalLink aria-hidden="true" />
                 </Button>
               </div>
               {updateCheckResult && (
                 <div className="space-y-2 border-t pt-4 text-xs">
                   <div className="flex justify-between gap-2">
-                    <span className="text-muted-foreground">Installed</span>
+                    <span className="text-muted-foreground">当前版本</span>
                     <span className="font-mono">
                       v{updateCheckResult.currentVersion}
                     </span>
                   </div>
                   <div className="flex justify-between gap-2">
                     <span className="text-muted-foreground">
-                      Latest release
+                      最新发布
                     </span>
                     <span className="font-mono">
                       {updateCheckResult.latestTag}
@@ -406,14 +403,14 @@ export function SettingsTab({
                   </div>
                   <p>
                     {updateCheckResult.updateAvailable
-                      ? "A newer version is available on GitHub."
-                      : "You’re up to date."}
+                      ? "GitHub 上有更新的版本可用。"
+                      : "已是最新版本。"}
                   </p>
                 </div>
               )}
               {updateCheckError && (
                 <p role="alert" className="text-xs text-danger-text">
-                  Could not check for updates: {updateCheckError}
+                  {updateCheckError}
                 </p>
               )}
             </CardContent>

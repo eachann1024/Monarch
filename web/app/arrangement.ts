@@ -133,7 +133,7 @@ export function closeDisconnectedGroups(monitors: MonitorRect[]): MonitorRect[] 
   }
   if (groups.length < 2) return result;
   const primary = groups.findIndex((group) => group.some((monitor) => monitor.primary));
-  if (primary < 0) throw new Error("gap closure requires a primary display");
+  if (primary < 0) throw new Error("消除间隙需要指定主显示器。");
   const attached = groups.splice(primary, 1)[0];
   while (groups.length) {
     let best: { distance: number; index: number; dx: number; dy: number } | undefined;
@@ -166,7 +166,7 @@ export function closeDisconnectedGroups(monitors: MonitorRect[]): MonitorRect[] 
         }
       }
     }
-    if (!best) throw new Error("cannot close gaps left by missing displays without overlap; adjust and re-save the profile");
+    if (!best) throw new Error("无法在不重叠的情况下消除未连接显示器留下的间隙；请调整并重新保存配置方案。");
     const group = groups.splice(best.index, 1)[0];
     for (const member of group) { member.x += best.dx; member.y += best.dy; }
     attached.push(...group);

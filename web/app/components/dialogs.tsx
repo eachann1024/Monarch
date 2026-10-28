@@ -31,26 +31,25 @@ export function PendingConfirmationDialog({
     <AlertDialog open={Boolean(pendingConfirmation)} onOpenChange={noop}>
       <AlertDialogContent>
         <AlertDialogHeader>
-          <AlertDialogTitle>Confirm changes</AlertDialogTitle>
+          <AlertDialogTitle>确认更改</AlertDialogTitle>
           <AlertDialogDescription>
             {pendingConfirmation ? (
               <>
-                Automatic rollback in{" "}
+                将在{" "}
                 <span className="font-medium text-foreground">
                   {formatMs(pendingConfirmation.remaining_ms)}
-                </span>
-                . Confirm to keep these display and audio settings or revert
-                now.
+                </span>{" "}
+                后自动还原。确认以保留这些显示器与音频设置，或立即还原。
               </>
             ) : null}
           </AlertDialogDescription>
         </AlertDialogHeader>
         <AlertDialogFooter>
           <AlertDialogCancel disabled={busy} onClick={onRevert}>
-            Revert
+            还原
           </AlertDialogCancel>
           <AlertDialogAction disabled={busy} onClick={onConfirm}>
-            Confirm
+            确认
           </AlertDialogAction>
         </AlertDialogFooter>
       </AlertDialogContent>
@@ -72,11 +71,11 @@ export function DisplayToggleDialog({
   onConfirm,
 }: DisplayToggleDialogProps) {
   const isActive = Boolean(pendingDisplayToggle?.currentlyActive);
-  const actionLabel = isActive ? "Detach Display" : "Attach Display";
-  const title = isActive ? "Detach display?" : "Attach display?";
+  const actionLabel = isActive ? "断开显示器" : "重新连接显示器";
+  const title = isActive ? "断开显示器？" : "重新连接显示器？";
   const description = isActive
-    ? "will be removed from the active layout."
-    : "will be added back to the active layout.";
+    ? "将从当前活动布局中移除。"
+    : "将重新添加到当前活动布局中。";
 
   return (
     <AlertDialog
@@ -98,7 +97,7 @@ export function DisplayToggleDialog({
           </AlertDialogDescription>
         </AlertDialogHeader>
         <AlertDialogFooter>
-          <AlertDialogCancel disabled={busy}>Cancel</AlertDialogCancel>
+          <AlertDialogCancel disabled={busy}>取消</AlertDialogCancel>
           <AlertDialogAction
             variant={isActive ? "destructive" : "default"}
             disabled={busy}
@@ -132,27 +131,27 @@ export function DeleteProfileDialog({
     >
       <AlertDialogContent>
         <AlertDialogHeader>
-          <AlertDialogTitle>Delete profile?</AlertDialogTitle>
+          <AlertDialogTitle>删除配置方案？</AlertDialogTitle>
           <AlertDialogDescription>
             {pendingProfileDelete ? (
               <>
-                This will permanently delete the profile{" "}
+                将永久删除配置方案{" "}
                 <span className="font-medium text-foreground">
                   {pendingProfileDelete}
                 </span>
-                . This action cannot be undone.
+                。此操作无法撤销。
               </>
             ) : null}
           </AlertDialogDescription>
         </AlertDialogHeader>
         <AlertDialogFooter>
-          <AlertDialogCancel disabled={busy}>Cancel</AlertDialogCancel>
+          <AlertDialogCancel disabled={busy}>取消</AlertDialogCancel>
           <AlertDialogAction
             variant="destructive"
             disabled={busy}
             onClick={onConfirm}
           >
-            Delete Profile
+            删除配置方案
           </AlertDialogAction>
         </AlertDialogFooter>
       </AlertDialogContent>

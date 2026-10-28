@@ -23,6 +23,7 @@ import {
   type View,
 } from "@/app/ui";
 import { capitalizeToastError, formatMs } from "@/app/utils";
+import { localizeBackendMessage } from "@/app/messages";
 
 import {
   applyLayout,
@@ -113,7 +114,9 @@ function App() {
       setRefreshError(null);
       return true;
     } catch (err) {
-      setRefreshError(err instanceof Error ? err.message : String(err));
+      setRefreshError(
+        localizeBackendMessage(err instanceof Error ? err.message : String(err)),
+      );
       return false;
     } finally {
       setLoading(false);
@@ -157,7 +160,8 @@ function App() {
         toast.success(successNotice);
       }
     } catch (err) {
-      const message = err instanceof Error ? err.message : String(err);
+      const rawMessage = err instanceof Error ? err.message : String(err);
+      const message = localizeBackendMessage(rawMessage);
       setError(message);
       toast.error(capitalizeToastError(message));
       return false;
@@ -187,7 +191,8 @@ function App() {
       try {
         await action();
       } catch (err) {
-        const message = err instanceof Error ? err.message : String(err);
+        const rawMessage = err instanceof Error ? err.message : String(err);
+        const message = localizeBackendMessage(rawMessage);
         setError(message);
         toast.error(capitalizeToastError(message));
       } finally {
@@ -202,7 +207,9 @@ function App() {
   useEffect(() => {
     void refreshState();
 
-    const listeners = subscriptions((error) => setError(String(error)));
+    const listeners = subscriptions((error) =>
+      setError(localizeBackendMessage(error)),
+    );
 
     listeners.add(
       listenMonarchEvent("monarch://state-changed", () => {
@@ -217,27 +224,27 @@ function App() {
           const payload = event.payload;
 
           if (payload.kind === "applied") {
-            toast("Settings applied", {
-              description: `Confirm within ${formatMs(payload.timeout_ms)} or it will roll back.`,
+            toast("已应用设置", {
+              description: `请在 ${formatMs(payload.timeout_ms)} 内确认，否则将自动还原。`,
             });
           }
 
           if (payload.kind === "confirmed") {
-            toast.success("Settings confirmed.");
+            toast.success("已确认设置。");
           }
 
           if (payload.kind === "rollback_failed") {
-            toast.error("Could not restore the previous settings", {
-              description: `${payload.message} Try Revert again, or check Windows Display and Sound settings.`,
+            toast.error("无法还原先前的设置", {
+              description: `${localizeBackendMessage(payload.message)} 请尝试再次还原，或检查 Windows 显示与声音设置。`,
             });
           }
 
           if (payload.kind === "reverted") {
-            toast("Settings reverted", {
+            toast("已还原设置", {
               description:
                 payload.reason === "timeout"
-                  ? "The rollback timer expired."
-                  : "The pending settings were reverted.",
+                  ? "还原倒计时已超时。"
+                  : "待确认的设置已还原。",
             });
           }
 
@@ -341,12 +348,12 @@ function App() {
 
   const settingsValidationMessage =
     rawRevertTimeout.length === 0
-      ? "Enter a whole number between 1 and 60."
+      ? "请输入 1 到 60 之间的整数。"
       : duplicateShortcutBase
-        ? "Profile and monitor shortcut bases must be different."
+        ? "配置方案与显示器的快捷键修饰键组合不能相同。"
         : revertTimeoutInRange
           ? null
-          : "Revert timeout must be a whole number between 1 and 60.";
+          : "还原超时时间必须是 1 到 60 之间的整数。";
 
   async function handleConfirmDisplayToggle() {
     if (!pendingDisplayToggle) {
@@ -354,9 +361,9 @@ function App() {
     }
 
     if (hasPendingConfirmation) {
-      toast("Resolve pending confirmation first", {
+      toast("请先处理待确认的设置变更", {
         description:
-          "Confirm or revert the current layout change before toggling another display.",
+          "在切换其他显示器前，请先确认或还原当前的布局变更。",
       });
       return;
     }
@@ -366,7 +373,7 @@ function App() {
 
     await runAction(
       () => toggleDisplay(target.idKey),
-      target.currentlyActive ? "Display detached" : "Display attached",
+      target.currentlyActive ? "已断开显示器" : "已重新连接显示器",
     );
   }
 
@@ -384,16 +391,16 @@ function App() {
     }
 
     if (hasPendingConfirmation) {
-      toast("Resolve pending confirmation first", {
+      toast("请先处理待确认的设置变更", {
         description:
-          "Profile changes are locked while a layout confirmation is pending.",
+          "在布局变更等待确认期间，配置方案处于锁定状态。",
       });
       return;
     }
 
     const profileName = pendingProfileDelete;
     setPendingProfileDelete(null);
-    await runAction(() => deleteProfile(profileName), "Profile deleted");
+    await runAction(() => deleteProfile(profileName), "配置方案已删除");
   }
 
   async function handleCheckForUpdates() {
@@ -403,14 +410,16 @@ function App() {
       const result = await checkGithubReleaseUpdate();
       setUpdateCheckResult(result);
       if (result.updateAvailable) {
-        toast("Update available", {
-          description: `${result.latestTag} is available on GitHub Releases.`,
+        toast("发现新版本", {
+          description: `GitHub Releases 上有新版本发布：${result.latestTag}。`,
         });
       } else {
-        toast.success("You are on the latest version.");
+        toast.success("已是最新版本。");
       }
     } catch (err) {
-      const message = err instanceof Error ? err.message : String(err);
+      const message = localizeBackendMessage(
+        err instanceof Error ? err.message : String(err),
+      );
       setUpdateCheckError(message);
       toast.error(capitalizeToastError(message));
     } finally {
@@ -426,7 +435,7 @@ function App() {
       setNewProfileAudio(null);
       setNewProfileName("");
       setNewProfileIgnoreMissingDraft(null);
-    }, "Profile saved");
+    }, "配置方案已保存");
   }
 
   function markSettingsDirty() {
@@ -467,13 +476,13 @@ function App() {
   function handleSettingsSubmit(event: FormEvent<HTMLFormElement>) {
     event.preventDefault();
     if (!revertTimeoutInRange) {
-      const message = "Revert timeout must be a whole number between 1 and 60.";
+      const message = "还原超时时间必须是 1 到 60 之间的整数。";
       setError(message);
       toast.error(capitalizeToastError(message));
       return;
     }
     if (duplicateShortcutBase) {
-      const message = "Profile and monitor shortcut bases must be different.";
+      const message = "配置方案与显示器的快捷键修饰键组合不能相同。";
       setError(message);
       toast.error(message);
       return;
@@ -509,7 +518,7 @@ function App() {
       setDisplayShortcutBaseInput(
         nextSettings.display_toggle_shortcut_base ?? "",
       );
-    }, "Settings updated");
+    }, "设置已更新");
   }
 
   return (
@@ -537,7 +546,7 @@ function App() {
           {loading ? (
             <Card>
               <CardContent className="p-6 text-sm text-muted-foreground">
-                Loading display topology...
+                正在加载显示器拓扑...
               </CardContent>
             </Card>
           ) : null}
@@ -557,7 +566,7 @@ function App() {
             }
             onApplyLayout={(layout) => runAction(() => applyLayout(layout))}
             onRestoreLastLayout={() => {
-              void runAction(restoreLastLayout, "Restored last layout");
+              void runAction(restoreLastLayout, "已还原上次布局");
             }}
             onToggleRequest={(selected) =>
               setPendingDisplayToggle({
@@ -588,13 +597,13 @@ function App() {
             onSaveProfileAudio={(name, id) => {
               void runAction(
                 () => setProfileAudio(name, id),
-                "Profile audio saved",
+                "已保存配置方案音频设置",
               );
             }}
             onSaveProfileDisplayOptions={(name, options) => {
               void runAction(
                 () => setProfileDisplayOptions(name, options),
-                "Profile display options saved",
+                "已保存配置方案显示器选项",
               );
             }}
             onNewProfileNameChange={setNewProfileName}
@@ -602,7 +611,7 @@ function App() {
               void handleSaveCurrentLayout();
             }}
             onApplyProfile={(name) => {
-              void runAction(() => applyProfile(name), "Profile applied");
+              void runAction(() => applyProfile(name), "配置方案已应用");
             }}
             onDeleteProfileRequest={setPendingProfileDelete}
           />

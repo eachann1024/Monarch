@@ -11,6 +11,7 @@ import {
   SelectValue,
 } from "@/components/ui/select";
 import { Volume2 } from "lucide-react";
+import { localizeReason } from "@/app/messages";
 import type { AudioOutput, AudioSnapshot, Profile } from "@/types";
 
 export function AudioOutputSelect({
@@ -19,7 +20,7 @@ export function AudioOutputSelect({
   saved,
   onChange,
   disabled,
-  label = "Audio output",
+  label = "音频输出",
 }: {
   audio: AudioSnapshot;
   value: string | null;
@@ -38,7 +39,7 @@ export function AudioOutputSelect({
   return (
     <div className="grid min-w-0 gap-1.5">
       <label htmlFor={id} className="field-label">
-        Audio output
+        音频输出
       </label>
       <Select
         value={value ?? "__unchanged__"}
@@ -51,11 +52,11 @@ export function AudioOutputSelect({
           <SelectValue />
         </SelectTrigger>
         <SelectContent>
-          <SelectItem value="__unchanged__">Leave unchanged</SelectItem>
+          <SelectItem value="__unchanged__">保持不变</SelectItem>
           {available.length > 0 && (
             <SelectGroup>
               <SelectSeparator />
-              <SelectLabel>Available</SelectLabel>
+              <SelectLabel>可用</SelectLabel>
               {available.map((device) => (
                 <SelectItem key={device.id} value={device.id}>
                   {device.name}
@@ -66,15 +67,15 @@ export function AudioOutputSelect({
           {(unavailable.length > 0 || missing) && (
             <SelectGroup>
               <SelectSeparator />
-              <SelectLabel>Unavailable</SelectLabel>
+              <SelectLabel>不可用</SelectLabel>
               {missing && (
                 <SelectItem value={value} disabled>
-                  {saved?.name ?? "Saved audio output"} (unavailable)
+                  {saved?.name ?? "已保存的音频输出"} (不可用)
                 </SelectItem>
               )}
               {unavailable.map((device) => (
                 <SelectItem key={device.id} value={device.id}>
-                  {device.name} (unavailable)
+                  {device.name} (不可用)
                 </SelectItem>
               ))}
             </SelectGroup>
@@ -89,18 +90,19 @@ export function CurrentAudioOutput({ audio }: { audio: AudioSnapshot }) {
   const current = audio.devices.find(
     (device) => device.id === audio.defaults.console,
   );
-  const name = audio.unavailable_reason
-    ? "Unavailable"
+  const localizedReason = localizeReason(audio.unavailable_reason);
+  const name = localizedReason
+    ? "不可用"
     : (current?.name ??
-      (audio.defaults.console ? "Device unavailable" : "No output device"));
+      (audio.defaults.console ? "设备不可用" : "无输出设备"));
   return (
     <p
       role="status"
       className="flex min-w-0 items-center gap-1.5 text-xs text-muted-foreground"
-      title={audio.unavailable_reason ?? name}
+      title={localizedReason ?? name}
     >
       <Volume2 className="size-3.5 shrink-0" aria-hidden="true" />
-      <span className="truncate">Audio: {name}</span>
+      <span className="truncate">音频：{name}</span>
     </p>
   );
 }
@@ -122,7 +124,7 @@ export function ProfileAudio({
     <div className="flex min-w-0 flex-wrap items-end gap-2">
       <div className="min-w-0 basis-56 grow sm:max-w-sm">
         <AudioOutputSelect
-          label={`Audio output for ${profile.name}`}
+          label={`配置方案 ${profile.name} 的音频输出`}
           audio={audio}
           value={selected}
           saved={profile.audio_output}
@@ -136,14 +138,14 @@ export function ProfileAudio({
             disabled={disabled}
             onClick={() => onSave(profile.name, selected)}
           >
-            Save audio
+            保存音频
           </Button>
           <Button
             variant="outline"
             disabled={disabled}
             onClick={() => setSelected(saved)}
           >
-            Cancel
+            取消
           </Button>
         </>
       )}
